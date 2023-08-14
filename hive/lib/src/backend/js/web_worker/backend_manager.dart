@@ -76,21 +76,21 @@ class BackendManagerWebWorker implements BackendManagerInterface {
     final objectStoreName = collection == null ? 'box' : name;
     // https://stackoverflow.com/a/17473952
     try {
-      var _exists = true;
+      var exists = true;
       if (collection == null) {
         await indexedDB!.open(databaseName, version: 1, onUpgradeNeeded: (e) {
           e.target.transaction!.abort();
-          _exists = false;
+          exists = false;
         });
       } else {
         final db =
             await indexedDB!.open(collection, version: 1, onUpgradeNeeded: (e) {
           var db = e.target.result as Database;
-          _exists = (db.objectStoreNames ?? []).contains(objectStoreName);
+          exists = (db.objectStoreNames ?? []).contains(objectStoreName);
         });
-        _exists = (db.objectStoreNames ?? []).contains(objectStoreName);
+        exists = (db.objectStoreNames ?? []).contains(objectStoreName);
       }
-      return _exists;
+      return exists;
     } catch (error) {
       return false;
     }
