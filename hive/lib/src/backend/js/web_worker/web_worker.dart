@@ -129,14 +129,14 @@ Future<void> startWebWorker() async {
 
             case 'delete':
               try {
-                final _db = _databases[operation.database] ??
+                final db0 = _databases[operation.database] ??
                     await indexedDB!.open(operation.database);
 
                 // directly deleting the entire DB if a non-collection Box
-                if (_db.objectStoreNames?.length == 1) {
-                  await indexedDB!.deleteDatabase(_db.name!);
+                if (db0.objectStoreNames?.length == 1) {
+                  await indexedDB!.deleteDatabase(db0.name!);
                 } else {
-                  final db = await indexedDB!.open(_db.name!, version: 1,
+                  final db = await indexedDB!.open(db0.name!, version: 1,
                       onUpgradeNeeded: (e) {
                     var db = e.target.result as Database;
                     if ((db.objectStoreNames ?? [])
@@ -145,7 +145,7 @@ Future<void> startWebWorker() async {
                     }
                   });
                   if ((db.objectStoreNames ?? []).isEmpty) {
-                    await indexedDB!.deleteDatabase(_db.name!);
+                    await indexedDB!.deleteDatabase(db0.name!);
                   }
                 }
               } finally {}
