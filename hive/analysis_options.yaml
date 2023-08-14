@@ -20,7 +20,6 @@ linter:
     - directives_ordering
     - empty_statements
     - implementation_imports
-    - invariant_booleans
     - iterable_contains_unrelated_type
     - list_remove_unrelated_type
     - lines_longer_than_80_chars
