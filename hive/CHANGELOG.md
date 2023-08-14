@@ -1,3 +1,10 @@
+# 3.0.0
+
+### Enchantments
+
+- Refactor: using type box instead box.
+- feat: support migrate data from box to type box.
+
 # 3.0.0-dev
 
 ### Enchantments
