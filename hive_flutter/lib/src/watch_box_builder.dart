@@ -31,7 +31,7 @@ class WatchBoxBuilder extends StatefulWidget {
   final List<String>? watchKeys;
 
   @override
-  _WatchBoxBuilderState createState() => _WatchBoxBuilderState();
+  State createState() => _WatchBoxBuilderState();
 }
 
 @Deprecated('Use [ValueListenableBuilder] and `box.listenable()` instead')
