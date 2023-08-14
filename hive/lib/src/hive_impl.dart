@@ -273,6 +273,9 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
 
   @override
   Box<E> typeBox<E>([String? collection]) {
+    if (E == dynamic || E == Object) {
+      throw HiveError('type E should not be dynamic or Object');
+    }
     final adapter = findAdapterForType(E);
     if (adapter == null) {
       throw HiveError("adapter for type ${E.toString()} is not exists!");
@@ -287,6 +290,22 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
   @override
   LazyBox<E> lazyBox<E>(String name, [String? collection]) =>
       _getBoxInternal<E>(name, true, collection) as LazyBox<E>;
+
+  @override
+  Box<E> lazyTypeBox<E>([String? collection]) {
+    if (E == dynamic || E == Object) {
+      throw HiveError('type E should not be dynamic or Object');
+    }
+    final adapter = findAdapterForType(E);
+    if (adapter == null) {
+      throw HiveError("adapter for type ${E.toString()} is not exists!");
+    }
+    return _getBoxInternal<E>(
+      adapter.typeId.toString(),
+      true,
+      collection,
+    ) as Box<E>;
+  }
 
   @override
   bool isBoxOpen(String name, [String? collection]) {

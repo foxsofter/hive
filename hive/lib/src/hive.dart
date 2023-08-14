@@ -89,6 +89,7 @@ abstract class HiveInterface implements TypeRegistry {
   });
 
   /// Returns a previously opened box.
+  @Deprecated('Use [typeBox] instead')
   Box<E> box<E>(String name);
 
   /// Returns a previously opened type box.
@@ -96,6 +97,10 @@ abstract class HiveInterface implements TypeRegistry {
 
   /// Returns a previously opened lazy box.
   LazyBox<E> lazyBox<E>(String name);
+
+  /// Returns a previously opened lazy type box.
+  @Deprecated('Use [lazyTypeBox] instead')
+  Box<E> lazyTypeBox<E>([String? collection]);
 
   /// Checks if a specific box is currently open.
   bool isBoxOpen(String name);
