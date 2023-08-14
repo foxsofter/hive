@@ -93,7 +93,7 @@ class TypeRegistryImpl implements TypeRegistry {
     }
     var typeId = adapter.typeId;
     if (!internal) {
-      if (typeId < 0 || typeId > 223) {
+      if (typeId < 0 || typeId > 65504) {
         throw HiveError('TypeId $typeId not allowed.');
       }
       typeId = typeId + reservedTypeIds;
@@ -122,7 +122,7 @@ class TypeRegistryImpl implements TypeRegistry {
   @override
   bool isAdapterRegistered(int typeId, {bool internal = false}) {
     if (!internal) {
-      if (typeId < 0 || typeId > 223) {
+      if (typeId < 0 || typeId > 65504) {
         throw HiveError('TypeId $typeId not allowed.');
       }
 

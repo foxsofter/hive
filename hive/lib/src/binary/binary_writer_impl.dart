@@ -340,7 +340,12 @@ class BinaryWriterImpl extends BinaryWriter {
             'Did you forget to register an adapter?');
       }
       if (writeTypeId) {
-        writeByte(resolved.typeId);
+        if (resolved.typeId > 223) {
+          writeByte(255);
+          writeWord(resolved.typeId);
+        } else {
+          writeByte(resolved.typeId);
+        }
       }
       resolved.adapter.write(this, value);
     }

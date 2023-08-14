@@ -291,7 +291,12 @@ class BinaryReaderImpl extends BinaryReader {
 
   @override
   dynamic read([int? typeId]) {
-    typeId ??= readByte();
+    if (typeId == null) {
+      typeId ??= readByte();
+      if (typeId == 255) {
+        typeId = readWord();
+      }
+    }
     switch (typeId) {
       case FrameValueType.nullT:
         return null;
