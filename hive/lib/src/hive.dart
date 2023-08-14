@@ -133,7 +133,11 @@ abstract class HiveInterface implements TypeRegistry {
   List<int> generateSecureKey();
 
   /// Checks if a box exists
+  @Deprecated('Use [typeBoxExists] instead')
   Future<bool> boxExists(String name, {String? path});
+
+  /// Checks if a type box exists
+  Future<bool> typeBoxExists<E>({String? path});
 
   /// Clears all registered adapters.
   ///

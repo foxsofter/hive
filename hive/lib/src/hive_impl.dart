@@ -361,6 +361,16 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
     return await manager.boxExists(lowerCaseName, path ?? homePath, collection);
   }
 
+  @override
+  Future<bool> typeBoxExists<E>({String? path, String? collection}) async {
+    final adapter = _checkAndGetTypeAdapter<E>();
+    return await manager.boxExists(
+      adapter.typeId.toString(),
+      path ?? homePath,
+      collection,
+    );
+  }
+
   // ignore: invalid_use_of_visible_for_testing_member
   ResolvedAdapter<E> _checkAndGetTypeAdapter<E>() {
     if (E == dynamic || E == Object) {
