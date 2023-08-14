@@ -56,3 +56,32 @@ extension RandomX on Random {
     return buffer;
   }
 }
+
+extension MapX<K, V> on Map<K, V> {
+  /// The matching elements.
+  ///
+  Map<K, V> where(bool Function(K, V) test) {
+    final ret = <MapEntry<K, V>>[];
+    final es = entries;
+    for (var e in es) {
+      if (test(e.key, e.value)) {
+        ret.add(e);
+      }
+    }
+    return Map.fromEntries(ret);
+  }
+
+  /// The matching elements.
+  ///
+  Map<K, VT> whereValueType<VT>() {
+    final ret = <MapEntry<K, VT>>[];
+    final es = entries;
+    for (var e in es) {
+      final v = e.value;
+      if (v is VT) {
+        ret.add(MapEntry<K, VT>(e.key, v));
+      }
+    }
+    return Map.fromEntries(ret);
+  }
+}

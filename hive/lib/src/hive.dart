@@ -43,6 +43,9 @@ abstract class HiveInterface implements TypeRegistry {
   });
 
   /// Opens a box only store type E.
+  /// 
+  /// If oldBox is not null, migrate the data of type E in oldBox to the current
+  /// box at the first initialization.
   ///
   /// If the box is already open, the instance is returned and all provided
   /// parameters are being ignored.

@@ -165,8 +165,27 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
     String? collection,
   }) async {
     final adapter = _checkAndGetTypeAdapter<E>();
-    return await _openBox<E>(
-      adapter.typeId.toString(),
+    final boxName = adapter.typeId.toString();
+    Box<E>? box;
+    if (oldBox != null &&
+        oldBox.isOpen &&
+        !await manager.boxExists(boxName, path ?? homePath, collection)) {
+      box = await _openBox<E>(
+        boxName,
+        false,
+        encryptionCipher,
+        keyComparator,
+        compactionStrategy,
+        crashRecovery,
+        path,
+        backend,
+        collection,
+      ) as Box<E>;
+      final vals = oldBox.toMap().whereValueType<E>();
+      await box.putAll(vals);
+    }
+    box ??= await _openBox<E>(
+      boxName,
       false,
       encryptionCipher,
       keyComparator,
@@ -176,6 +195,7 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
       backend,
       collection,
     ) as Box<E>;
+    return box;
   }
 
   @override

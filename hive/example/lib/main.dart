@@ -66,7 +66,7 @@ void main() async {
   await box.put('dave', person2);
 
   final p1s = <Person>[];
-  for (var i = 0; i < 100; i++) {
+  for (var i = 0; i < 3; i++) {
     p1s.add(Person(
         name: 'fewfwefewfwef$i',
         age: 1100 + i,
@@ -74,13 +74,17 @@ void main() async {
   }
   box.addAll(p1s);
 
-  debugPrint(box.get('peter')); // Peter: 21
-  debugPrint(box.get('dave')); // Dave: 22
-  debugPrint(box.get(1)); // Dave: 22
+  final keys = box.toMap();
+  print('keys: ${keys}');
+  final values = box.values;
+  print('values: ${values}');
 
-  final tb = await Hive.openTypeBox<Person>();
-  final bvs = box.values.whereType<Person>();
-  tb.addAll(bvs);
+  print(box.get('peter')); // Peter: 21
+  print(box.get('dave')); // Dave: 22
+  print(box.get(1)); // Dave: 22
+
+  final tb = await Hive.openTypeBox<Person>(oldBox: box);
+
   await tb.close();
   await box.close();
 
@@ -88,7 +92,7 @@ void main() async {
   sw.start();
   var lb = await Hive.openTypeBox<Person>();
   sw.stop();
-  debugPrint("time cost: ${sw.elapsedMilliseconds}");
-  debugPrint(lb.get('peter')); // Peter: 21
-  debugPrint(lb.get('dave')); // Dave: 22
+  print("time cost: ${sw.elapsedMilliseconds}");
+  print(lb.get('peter')); // Peter: 21
+  print(lb.get('dave')); // Dave: 22
 }
