@@ -27,6 +27,7 @@ abstract class HiveInterface implements TypeRegistry {
   ///
   /// If the box is already open, the instance is returned and all provided
   /// parameters are being ignored.
+  @Deprecated('Use [openTypeBox] instead')
   Future<Box<E>> openBox<E>(
     String name, {
     HiveCipher? encryptionCipher,
@@ -35,16 +36,32 @@ abstract class HiveInterface implements TypeRegistry {
     bool crashRecovery = true,
     String? path,
     @Deprecated('Use [backend] with a [StorageBackendMemory] instead')
-        Uint8List? bytes,
+    Uint8List? bytes,
     StorageBackend? backend,
     String? collection,
     @Deprecated('Use encryptionCipher instead') List<int>? encryptionKey,
+  });
+
+  /// Opens a box only store type E.
+  ///
+  /// If the box is already open, the instance is returned and all provided
+  /// parameters are being ignored.
+  Future<Box<E>> openTypeBox<E>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
   });
 
   /// Opens a lazy box.
   ///
   /// If the box is already open, the instance is returned and all provided
   /// parameters are being ignored.
+  @Deprecated('Use [openLazyTypeBox] instead')
   Future<LazyBox<E>> openLazyBox<E>(
     String name, {
     HiveCipher? encryptionCipher,
@@ -57,8 +74,25 @@ abstract class HiveInterface implements TypeRegistry {
     StorageBackend? backend,
   });
 
+  /// Opens a lazy box only store type E.
+  ///
+  /// If the box is already open, the instance is returned and all provided
+  /// parameters are being ignored.
+  Future<LazyBox<E>> openLazyTypeBox<E>({
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    String? collection,
+    StorageBackend? backend,
+  });
+
   /// Returns a previously opened box.
   Box<E> box<E>(String name);
+
+  /// Returns a previously opened type box.
+  Box<E> typeBox<E>([String? collection]);
 
   /// Returns a previously opened lazy box.
   LazyBox<E> lazyBox<E>(String name);

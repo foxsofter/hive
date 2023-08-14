@@ -30,7 +30,7 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
 
   bool useLocks = true;
 
-  bool wasInitialized=false;
+  bool wasInitialized = false;
 
   /// Not part of public API
   HiveImpl() {
@@ -58,7 +58,7 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
     homePath = path;
     _managerOverride = BackendManager.select(backendPreference);
     this.useLocks = useLocks;
-    wasInitialized=true;
+    wasInitialized = true;
   }
 
   Future<BoxBase<E>> _openBox<E>(
@@ -138,7 +138,7 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
     bool crashRecovery = true,
     String? path,
     @Deprecated('Use [backend] with a [StorageBackendMemory] instead')
-        Uint8List? bytes,
+    Uint8List? bytes,
     StorageBackend? backend,
     String? collection,
     @Deprecated('Use encryptionCipher instead') List<int>? encryptionKey,
@@ -151,6 +151,37 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
     }
     return await _openBox<E>(name, false, encryptionCipher, keyComparator,
         compactionStrategy, crashRecovery, path, backend, collection) as Box<E>;
+  }
+
+  @override
+  Future<Box<E>> openTypeBox<E>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) async {
+    if (E == dynamic || E == Object) {
+      throw HiveError('type E should not be dynamic or Object');
+    }
+    final adapter = findAdapterForType(E);
+    if (adapter == null) {
+      throw HiveError("adapter for type ${E.toString()} is not exists!");
+    }
+    return await _openBox<E>(
+      adapter.typeId.toString(),
+      false,
+      encryptionCipher,
+      keyComparator,
+      compactionStrategy,
+      crashRecovery,
+      path,
+      backend,
+      collection,
+    ) as Box<E>;
   }
 
   @override
@@ -170,6 +201,35 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
     }
     return await _openBox<E>(
         name,
+        true,
+        encryptionCipher,
+        keyComparator,
+        compactionStrategy,
+        crashRecovery,
+        path,
+        backend,
+        collection) as LazyBox<E>;
+  }
+
+  @override
+  Future<LazyBox<E>> openLazyTypeBox<E>({
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    String? collection,
+    StorageBackend? backend,
+  }) async {
+    if (E == dynamic || E == Object) {
+      throw HiveError('type E should not be dynamic or Object');
+    }
+    final adapter = findAdapterForType(E);
+    if (adapter == null) {
+      throw HiveError("adapter for type ${E.toString()} is not exists!");
+    }
+    return await _openBox<E>(
+        adapter.typeId.toString(),
         true,
         encryptionCipher,
         keyComparator,
@@ -210,6 +270,19 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
   @override
   Box<E> box<E>(String name, [String? collection]) =>
       _getBoxInternal<E>(name, false, collection) as Box<E>;
+
+  @override
+  Box<E> typeBox<E>([String? collection]) {
+    final adapter = findAdapterForType(E);
+    if (adapter == null) {
+      throw HiveError("adapter for type ${E.toString()} is not exists!");
+    }
+    return _getBoxInternal<E>(
+      adapter.typeId.toString(),
+      false,
+      collection,
+    ) as Box<E>;
+  }
 
   @override
   LazyBox<E> lazyBox<E>(String name, [String? collection]) =>

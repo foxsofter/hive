@@ -14,7 +14,9 @@ class ResolvedAdapter<T> {
 
   bool matchesRuntimeType(dynamic value) => value.runtimeType == T;
 
-  bool matchesType(dynamic value) => value is T;
+  bool matchesValueType(dynamic value) => value is T;
+
+  bool matchesType(Type type) => type == T;
 }
 
 class _NullTypeRegistry implements TypeRegistryImpl {
@@ -28,6 +30,9 @@ class _NullTypeRegistry implements TypeRegistryImpl {
 
   @override
   Never findAdapterForValue(value) => throw UnimplementedError();
+
+  @override
+  Never findAdapterForType(Type type) => throw UnimplementedError();
 
   @override
   Never ignoreTypeId<T>(int typeId) => throw UnimplementedError();
@@ -58,21 +63,29 @@ class TypeRegistryImpl implements TypeRegistry {
 
   /// Not part of public API
   ResolvedAdapter? findAdapterForValue(dynamic value) {
-    ResolvedAdapter? match;
     for (var adapter in _typeAdapters.values) {
       if (adapter.matchesRuntimeType(value)) {
         return adapter;
       }
-      if (adapter.matchesType(value) && match == null) {
-        match = adapter;
+      if (adapter.matchesValueType(value)) {
+        return adapter;
       }
     }
-    return match;
+    return null;
   }
 
   /// Not part of public API
   ResolvedAdapter? findAdapterForTypeId(int typeId) {
     return _typeAdapters[typeId];
+  }
+
+  ResolvedAdapter? findAdapterForType(Type type) {
+    for (var adapter in _typeAdapters.values) {
+      if (adapter.matchesType(type)) {
+        return adapter;
+      }
+    }
+    return null;
   }
 
   @override
