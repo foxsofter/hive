@@ -164,13 +164,7 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
     StorageBackend? backend,
     String? collection,
   }) async {
-    if (E == dynamic || E == Object) {
-      throw HiveError('type E should not be dynamic or Object');
-    }
-    final adapter = findAdapterForType(E);
-    if (adapter == null) {
-      throw HiveError("adapter for type ${E.toString()} is not exists!");
-    }
+    final adapter = _checkAndGetTypeAdapter<E>();
     return await _openBox<E>(
       adapter.typeId.toString(),
       false,
@@ -221,13 +215,7 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
     String? collection,
     StorageBackend? backend,
   }) async {
-    if (E == dynamic || E == Object) {
-      throw HiveError('type E should not be dynamic or Object');
-    }
-    final adapter = findAdapterForType(E);
-    if (adapter == null) {
-      throw HiveError("adapter for type ${E.toString()} is not exists!");
-    }
+    final adapter = _checkAndGetTypeAdapter<E>();
     return await _openBox<E>(
         adapter.typeId.toString(),
         true,
@@ -273,13 +261,7 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
 
   @override
   Box<E> typeBox<E>([String? collection]) {
-    if (E == dynamic || E == Object) {
-      throw HiveError('type E should not be dynamic or Object');
-    }
-    final adapter = findAdapterForType(E);
-    if (adapter == null) {
-      throw HiveError("adapter for type ${E.toString()} is not exists!");
-    }
+    final adapter = _checkAndGetTypeAdapter<E>();
     return _getBoxInternal<E>(
       adapter.typeId.toString(),
       false,
@@ -293,13 +275,7 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
 
   @override
   Box<E> lazyTypeBox<E>([String? collection]) {
-    if (E == dynamic || E == Object) {
-      throw HiveError('type E should not be dynamic or Object');
-    }
-    final adapter = findAdapterForType(E);
-    if (adapter == null) {
-      throw HiveError("adapter for type ${E.toString()} is not exists!");
-    }
+    final adapter = _checkAndGetTypeAdapter<E>();
     return _getBoxInternal<E>(
       adapter.typeId.toString(),
       true,
@@ -310,6 +286,15 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
   @override
   bool isBoxOpen(String name, [String? collection]) {
     return _boxes.containsKey(TupleBoxKey(name.toLowerCase(), collection));
+  }
+
+  @override
+  bool isTypeBoxOpen<E>([String? collection]) {
+    final adapter = _checkAndGetTypeAdapter<E>();
+    return _boxes.containsKey(TupleBoxKey(
+      adapter.typeId.toString(),
+      collection,
+    ));
   }
 
   @override
@@ -341,6 +326,21 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
   }
 
   @override
+  Future<void> deleteTypeBoxFromDisk<E>({
+    String? path,
+    String? collection,
+  }) async {
+    final adapter = _checkAndGetTypeAdapter<E>();
+    final name = adapter.typeId.toString();
+    var box = _boxes[TupleBoxKey(name, collection)];
+    if (box != null) {
+      await box.deleteFromDisk();
+    } else {
+      await manager.deleteBox(name, path ?? homePath, collection);
+    }
+  }
+
+  @override
   Future<void> deleteFromDisk() {
     var deleteFutures = _boxes.values.toList().map((box) {
       return box.deleteFromDisk();
@@ -359,6 +359,18 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
       {String? path, String? collection}) async {
     var lowerCaseName = name.toLowerCase();
     return await manager.boxExists(lowerCaseName, path ?? homePath, collection);
+  }
+
+  // ignore: invalid_use_of_visible_for_testing_member
+  ResolvedAdapter<E> _checkAndGetTypeAdapter<E>() {
+    if (E == dynamic || E == Object) {
+      throw HiveError('type E should not be dynamic or Object');
+    }
+    final adapter = findAdapterForType<E>();
+    if (adapter == null) {
+      throw HiveError("adapter for type ${E.toString()} is not exists!");
+    }
+    return adapter;
   }
 }
 

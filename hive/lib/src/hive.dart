@@ -103,7 +103,11 @@ abstract class HiveInterface implements TypeRegistry {
   Box<E> lazyTypeBox<E>([String? collection]);
 
   /// Checks if a specific box is currently open.
+  @Deprecated('Use [isTypeBoxOpen] instead')
   bool isBoxOpen(String name);
+
+  /// Checks if a specific type box is currently open.
+  bool isTypeBoxOpen<E>();
 
   /// Closes all open boxes.
   Future<void> close();
@@ -111,8 +115,14 @@ abstract class HiveInterface implements TypeRegistry {
   /// Removes the file which contains the box and closes the box.
   ///
   /// In the browser, the IndexedDB database is being removed.
+  @Deprecated('Use [deleteTypeBoxFromDisk] instead')
   Future<void> deleteBoxFromDisk(String name,
       {String? path, String? collection});
+
+  /// Removes the file which contains the type box and closes the box.
+  ///
+  /// In the browser, the IndexedDB database is being removed.
+  Future<void> deleteTypeBoxFromDisk<E>({String? path, String? collection});
 
   /// Deletes all currently open boxes from disk.
   ///
