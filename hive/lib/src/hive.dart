@@ -43,7 +43,7 @@ abstract class HiveInterface implements TypeRegistry {
   });
 
   /// Opens a box only store type E.
-  /// 
+  ///
   /// If oldBox is not null, migrate the data of type E in oldBox to the current
   /// box at the first initialization.
   ///
@@ -99,10 +99,10 @@ abstract class HiveInterface implements TypeRegistry {
   Box<E> typeBox<E>([String? collection]);
 
   /// Returns a previously opened lazy box.
+  @Deprecated('Use [lazyTypeBox] instead')
   LazyBox<E> lazyBox<E>(String name);
 
   /// Returns a previously opened lazy type box.
-  @Deprecated('Use [lazyTypeBox] instead')
   Box<E> lazyTypeBox<E>([String? collection]);
 
   /// Checks if a specific box is currently open.
