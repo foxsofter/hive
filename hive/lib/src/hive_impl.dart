@@ -262,7 +262,7 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
             'and of type $typeName.');
       }
     } else {
-      throw HiveError('Box not found. Did you forget to call Hive.openBox()?');
+      throw HiveError('Box not found. Did you forget to open box?');
     }
   }
 

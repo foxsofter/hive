@@ -125,6 +125,7 @@ class BoxCollection implements implementation.BoxCollection {
 
   @override
   Future<void> deleteFromDisk() => Future.wait(
+        // ignore: deprecated_member_use_from_same_package
         boxNames.map((box) => Hive.deleteBoxFromDisk(box, collection: name)),
       );
 }
