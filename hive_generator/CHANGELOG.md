@@ -1,4 +1,4 @@
-## 2.1.0
+## 3.1.0
 - Support ignore typeId.
 
 ## 2.0.0
