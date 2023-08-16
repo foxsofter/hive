@@ -20,9 +20,16 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
     return adapterName;
   }
 
+  static int generateTypeId(String typeName) {
+    return typeName.hashCode;
+  }
+
   @override
   Future<String> generateForAnnotatedElement(
-      Element element, ConstantReader annotation, BuildStep buildStep) async {
+    Element element,
+    ConstantReader annotation,
+    BuildStep buildStep,
+  ) async {
     var interface = getInterface(element);
     var library = await buildStep.inputLibrary;
     var gettersAndSetters = getAccessors(interface, library);
@@ -33,7 +40,7 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
     var setters = gettersAndSetters[1];
     verifyFieldIndices(setters);
 
-    var typeId = getTypeId(annotation);
+    var typeId = getTypeId(interface.name, annotation);
 
     var adapterName = getAdapterName(interface.name, annotation);
     var builder = interface is EnumElement
@@ -155,16 +162,21 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
     var annAdapterName = annotation.read('adapterName');
     if (annAdapterName.isNull) {
       return generateName(typeName);
-    } else {
-      return annAdapterName.stringValue;
     }
+    return annAdapterName.stringValue;
   }
 
-  int getTypeId(ConstantReader annotation) {
-    check(
-      !annotation.read('typeId').isNull,
-      'You have to provide a non-null typeId.',
-    );
-    return annotation.read('typeId').intValue;
+  int getTypeId(String typeName, ConstantReader annotation) {
+    final annTypeId = annotation.read('typeId');
+    if (annTypeId.isNull) {
+      return generateTypeId(typeName);
+    }
+    final typeId = annTypeId.intValue;
+    if (typeId >= 223) {
+      throw HiveError(
+        'typeId can only be in the range [0,223)',
+      );
+    }
+    return typeId;
   }
 }
