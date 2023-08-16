@@ -342,7 +342,7 @@ class BinaryWriterImpl extends BinaryWriter {
       if (writeTypeId) {
         if (resolved.typeId > 223) {
           writeByte(255);
-          writeWord(resolved.typeId);
+          writeInt32(resolved.typeId);
         } else {
           writeByte(resolved.typeId);
         }

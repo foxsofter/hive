@@ -294,7 +294,7 @@ class BinaryReaderImpl extends BinaryReader {
     if (typeId == null) {
       typeId ??= readByte();
       if (typeId == 255) {
-        typeId = readWord();
+        typeId = readInt32();
       }
     }
     switch (typeId) {
