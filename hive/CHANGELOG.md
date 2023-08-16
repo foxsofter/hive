@@ -1,3 +1,6 @@
+## 3.1.0
+- feat: support ignore typeId.
+
 # 3.0.0
 
 ### Enchantments
