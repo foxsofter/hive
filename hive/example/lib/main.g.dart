@@ -48,7 +48,7 @@ class PersonAdapter extends TypeAdapter<Person> {
 
 class Person2Adapter extends TypeAdapter<Person2> {
   @override
-  final int typeId = 276;
+  final int typeId = 222;
 
   @override
   Person2 read(BinaryReader reader) {

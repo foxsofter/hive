@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:hive/hive.dart';
+import 'src/lib.dart';
 
 part 'main.g.dart';
 
@@ -23,7 +24,7 @@ class Person {
   }
 }
 
-@HiveType(typeId: 255)
+@HiveType(typeId: 222)
 class Person2 {
   Person2({required this.name, required this.age, required this.friends});
 
@@ -47,7 +48,9 @@ void main() async {
   Hive
     ..init(path)
     ..registerAdapter(PersonAdapter())
-    ..registerAdapter(Person2Adapter());
+    ..registerAdapter(Person2Adapter())
+    ..registerAdapter(Person3Adapter())
+    ..registerAdapter(Person4Adapter());
 
   var box = await Hive.openBox('testBox');
 
@@ -95,4 +98,14 @@ void main() async {
   print("time cost: ${sw.elapsedMilliseconds}");
   print(lb.get('peter')); // Peter: 21
   print(lb.get('dave')); // Dave: 22
+
+  var lb3 = await Hive.openTypeBox<Person3>();
+  final p3s = <Person3>[];
+  for (var i = 0; i < 3; i++) {
+    p3s.add(Person3(
+        name: 'p3 $i', age: 1100 + i, friends: ['Linda', 'Marc', 'Anne']));
+  }
+  lb3.addAll(p3s);
+
+  print(lb3.get(0)); // Peter: 21
 }
