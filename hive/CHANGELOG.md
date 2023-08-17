@@ -1,3 +1,6 @@
+## 3.1.1
+- feat: add openTypeBoxs api
+
 ## 3.1.0
 - feat: support ignore typeId.
 
