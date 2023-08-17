@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 part 'person3.g.dart';
 
 @HiveType()
-class Person3 {
+class Person3 extends HiveObject {
   Person3({required this.name, required this.age, required this.friends});
 
   @HiveField(0)

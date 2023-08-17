@@ -60,6 +60,353 @@ abstract class HiveInterface implements TypeRegistry {
     String? collection,
   });
 
+  /// Opens two box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox2<E1, E2>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens three box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox3<E1, E2, E3>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens four box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox4<E1, E2, E3, E4>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens five box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox5<E1, E2, E3, E4, E5>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens six box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox6<E1, E2, E3, E4, E5, E6>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens seven box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox7<E1, E2, E3, E4, E5, E6, E7>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens eight box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox8<E1, E2, E3, E4, E5, E6, E7, E8>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens night box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox9<E1, E2, E3, E4, E5, E6, E7, E8, E9>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens 10 box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox10<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens 11 box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox11<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens 12 box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void>
+      openTypeBox12<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens 13 box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void>
+      openTypeBox13<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12, E13>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens 14 box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox14<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+      E13, E14>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens 15 box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox15<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+      E13, E14, E15>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens 16 box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox16<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+      E13, E14, E15, E16>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens 17 box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox17<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+      E13, E14, E15, E16, E17>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens 18 box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox18<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+      E13, E14, E15, E16, E17, E18>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens 19 box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox19<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+      E13, E14, E15, E16, E17, E18, E19>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens 20 box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox20<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+      E13, E14, E15, E16, E17, E18, E19, E20>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens 21 box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox21<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+      E13, E14, E15, E16, E17, E18, E19, E20, E21>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
+  /// Opens 22 box store types.
+  ///
+  /// If oldBox is not null, migrate the data of types in oldBox to the match
+  /// type box at the first initialization.
+  ///
+  Future<void> openTypeBox22<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+      E13, E14, E15, E16, E17, E18, E19, E20, E21, E22>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  });
+
   /// Opens a lazy box.
   ///
   /// If the box is already open, the instance is returned and all provided

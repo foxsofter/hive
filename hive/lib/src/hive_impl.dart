@@ -149,8 +149,17 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
     if (backend == null && bytes != null) {
       backend = StorageBackendMemory(bytes, encryptionCipher);
     }
-    return await _openBox<E>(name, false, encryptionCipher, keyComparator,
-        compactionStrategy, crashRecovery, path, backend, collection) as Box<E>;
+    return await _openBox<E>(
+      name,
+      false,
+      encryptionCipher,
+      keyComparator,
+      compactionStrategy,
+      crashRecovery,
+      path,
+      backend,
+      collection,
+    ) as Box<E>;
   }
 
   @override
@@ -163,8 +172,20 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
     String? path,
     StorageBackend? backend,
     String? collection,
+  }) =>
+      _openTypeBox<E>();
+
+  Future<Box<E>> _openTypeBox<E>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
   }) async {
-    final adapter = _checkAndGetTypeAdapter<E>();
+    final adapter = _checkAndGetTypeAdapter(E);
     final boxName = adapter.typeId.toString();
     Box<E>? box;
     if (oldBox != null &&
@@ -235,7 +256,7 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
     String? collection,
     StorageBackend? backend,
   }) async {
-    final adapter = _checkAndGetTypeAdapter<E>();
+    final adapter = _checkAndGetTypeAdapter(E);
     return await _openBox<E>(
         adapter.typeId.toString(),
         true,
@@ -281,7 +302,7 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
 
   @override
   Box<E> typeBox<E>([String? collection]) {
-    final adapter = _checkAndGetTypeAdapter<E>();
+    final adapter = _checkAndGetTypeAdapter(E);
     return _getBoxInternal<E>(
       adapter.typeId.toString(),
       false,
@@ -295,7 +316,7 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
 
   @override
   Box<E> lazyTypeBox<E>([String? collection]) {
-    final adapter = _checkAndGetTypeAdapter<E>();
+    final adapter = _checkAndGetTypeAdapter(E);
     return _getBoxInternal<E>(
       adapter.typeId.toString(),
       true,
@@ -310,7 +331,7 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
 
   @override
   bool isTypeBoxOpen<E>([String? collection]) {
-    final adapter = _checkAndGetTypeAdapter<E>();
+    final adapter = _checkAndGetTypeAdapter(E);
     return _boxes.containsKey(TupleBoxKey(
       adapter.typeId.toString(),
       collection,
@@ -350,7 +371,7 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
     String? path,
     String? collection,
   }) async {
-    final adapter = _checkAndGetTypeAdapter<E>();
+    final adapter = _checkAndGetTypeAdapter(E);
     final name = adapter.typeId.toString();
     var box = _boxes[TupleBoxKey(name, collection)];
     if (box != null) {
@@ -383,7 +404,7 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
 
   @override
   Future<bool> typeBoxExists<E>({String? path, String? collection}) async {
-    final adapter = _checkAndGetTypeAdapter<E>();
+    final adapter = _checkAndGetTypeAdapter(E);
     return await manager.boxExists(
       adapter.typeId.toString(),
       path ?? homePath,
@@ -392,16 +413,1838 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
   }
 
   // ignore: invalid_use_of_visible_for_testing_member
-  ResolvedAdapter<E> _checkAndGetTypeAdapter<E>() {
-    if (E == dynamic || E == Object) {
+  ResolvedAdapter _checkAndGetTypeAdapter(Type type) {
+    if (type == dynamic || type == Object) {
       throw HiveError('type E should not be dynamic or Object');
     }
-    final adapter = findAdapterForType<E>();
+    final adapter = findAdapterForType(type);
     if (adapter == null) {
-      throw HiveError("adapter for type ${E.toString()} is not exists!");
+      throw HiveError("adapter for type ${type.toString()} is not exists!");
     }
     return adapter;
   }
+
+  @override
+  Future<void> openTypeBox2<E1, E2>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) async {
+    await Future.wait([
+      _openTypeBox<E1>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E2>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      )
+    ]);
+  }
+
+  @override
+  Future<void> openTypeBox3<E1, E2, E3>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) async {
+    await Future.wait([
+      _openTypeBox<E1>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E2>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E3>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+    ]);
+  }
+
+  @override
+  Future<void> openTypeBox4<E1, E2, E3, E4>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) async {
+    await Future.wait([
+      _openTypeBox<E1>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E2>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E3>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E4>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+    ]);
+  }
+
+  @override
+  Future<void> openTypeBox5<E1, E2, E3, E4, E5>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) async {
+    await Future.wait([
+      _openTypeBox<E1>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E2>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E3>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E4>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E5>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+    ]);
+  }
+
+  @override
+  Future<void> openTypeBox6<E1, E2, E3, E4, E5, E6>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) async {
+    await Future.wait([
+      _openTypeBox<E1>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E2>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E3>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E4>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E5>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E6>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+    ]);
+  }
+
+  @override
+  Future<void> openTypeBox7<E1, E2, E3, E4, E5, E6, E7>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) async {
+    await Future.wait([
+      _openTypeBox<E1>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E2>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E3>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E4>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E5>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E6>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+      _openTypeBox<E7>(
+        oldBox: oldBox,
+        encryptionCipher: encryptionCipher,
+        keyComparator: keyComparator,
+        compactionStrategy: compactionStrategy,
+      ),
+    ]);
+  }
+
+  @override
+  Future<void> openTypeBox8<E1, E2, E3, E4, E5, E6, E7, E8>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) =>
+      Future.wait([
+        _openTypeBox<E1>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E2>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E3>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E4>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E5>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E6>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E7>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E8>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+      ]);
+
+  @override
+  Future<void> openTypeBox9<E1, E2, E3, E4, E5, E6, E7, E8, E9>(
+          {Box? oldBox,
+          HiveCipher? encryptionCipher,
+          KeyComparator keyComparator = defaultKeyComparator,
+          CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+          bool crashRecovery = true,
+          String? path,
+          StorageBackend? backend,
+          String? collection}) =>
+      Future.wait([
+        _openTypeBox<E1>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E2>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E3>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E4>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E5>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E6>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E7>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E8>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E9>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+      ]);
+
+  @override
+  Future<void> openTypeBox10<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) =>
+      Future.wait([
+        _openTypeBox<E1>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E2>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E3>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E4>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E5>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E6>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E7>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E8>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E9>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E10>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+      ]);
+
+  @override
+  Future<void> openTypeBox11<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) =>
+      Future.wait([
+        _openTypeBox<E1>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E2>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E3>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E4>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E5>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E6>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E7>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E8>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E9>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E10>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E11>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+      ]);
+
+  @override
+  Future<void>
+      openTypeBox12<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) =>
+          Future.wait([
+            _openTypeBox<E1>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E2>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E3>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E4>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E5>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E6>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E7>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E8>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E9>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E10>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E11>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E12>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+          ]);
+
+  @override
+  Future<void>
+      openTypeBox13<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12, E13>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) =>
+          Future.wait([
+            _openTypeBox<E1>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E2>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E3>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E4>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E5>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E6>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E7>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E8>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E9>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E10>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E11>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E12>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+            _openTypeBox<E13>(
+              oldBox: oldBox,
+              encryptionCipher: encryptionCipher,
+              keyComparator: keyComparator,
+              compactionStrategy: compactionStrategy,
+            ),
+          ]);
+
+  @override
+  Future<void> openTypeBox14<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+          E13, E14>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) =>
+      Future.wait([
+        _openTypeBox<E1>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E2>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E3>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E4>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E5>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E6>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E7>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E8>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E9>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E10>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E11>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E12>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E13>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E14>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+      ]);
+
+  @override
+  Future<void> openTypeBox15<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+          E13, E14, E15>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) =>
+      Future.wait([
+        _openTypeBox<E1>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E2>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E3>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E4>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E5>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E6>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E7>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E8>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E9>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E10>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E11>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E12>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E13>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E14>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E15>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+      ]);
+
+  @override
+  Future<void> openTypeBox16<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+          E13, E14, E15, E16>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) =>
+      Future.wait([
+        _openTypeBox<E1>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E2>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E3>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E4>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E5>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E6>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E7>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E8>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E9>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E10>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E11>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E12>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E13>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E14>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E15>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E16>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+      ]);
+
+  @override
+  Future<void> openTypeBox17<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+          E13, E14, E15, E16, E17>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) =>
+      Future.wait([
+        _openTypeBox<E1>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E2>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E3>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E4>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E5>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E6>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E7>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E8>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E9>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E10>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E11>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E12>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E13>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E14>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E15>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E16>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E17>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+      ]);
+
+  @override
+  Future<void> openTypeBox18<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+          E13, E14, E15, E16, E17, E18>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) =>
+      Future.wait([
+        _openTypeBox<E1>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E2>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E3>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E4>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E5>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E6>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E7>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E8>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E9>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E10>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E11>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E12>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E13>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E14>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E15>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E16>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E17>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E18>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+      ]);
+
+  @override
+  Future<void> openTypeBox19<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+          E13, E14, E15, E16, E17, E18, E19>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) =>
+      Future.wait([
+        _openTypeBox<E1>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E2>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E3>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E4>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E5>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E6>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E7>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E8>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E9>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E10>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E11>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E12>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E13>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E14>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E15>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E16>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E17>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E18>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E19>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+      ]);
+
+  @override
+  Future<void> openTypeBox20<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+          E13, E14, E15, E16, E17, E18, E19, E20>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) =>
+      Future.wait([
+        _openTypeBox<E1>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E2>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E3>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E4>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E5>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E6>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E7>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E8>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E9>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E10>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E11>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E12>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E13>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E14>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E15>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E16>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E17>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E18>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E19>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E20>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+      ]);
+
+  @override
+  Future<void> openTypeBox21<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+          E13, E14, E15, E16, E17, E18, E19, E20, E21>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) =>
+      Future.wait([
+        _openTypeBox<E1>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E2>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E3>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E4>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E5>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E6>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E7>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E8>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E9>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E10>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E11>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E12>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E13>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E14>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E15>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E16>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E17>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E18>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E19>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E20>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E21>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+      ]);
+
+  @override
+  Future<void> openTypeBox22<E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12,
+          E13, E14, E15, E16, E17, E18, E19, E20, E21, E22>({
+    Box? oldBox,
+    HiveCipher? encryptionCipher,
+    KeyComparator keyComparator = defaultKeyComparator,
+    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+    bool crashRecovery = true,
+    String? path,
+    StorageBackend? backend,
+    String? collection,
+  }) =>
+      Future.wait([
+        _openTypeBox<E1>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E2>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E3>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E4>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E5>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E6>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E7>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E8>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E9>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E10>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E11>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E12>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E13>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E14>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E15>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E16>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E17>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E18>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E19>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E20>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E21>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+        _openTypeBox<E22>(
+          oldBox: oldBox,
+          encryptionCipher: encryptionCipher,
+          keyComparator: keyComparator,
+          compactionStrategy: compactionStrategy,
+        ),
+      ]);
 }
 
 /// tiny helper for map key management...

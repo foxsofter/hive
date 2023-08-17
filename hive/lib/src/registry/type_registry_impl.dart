@@ -32,7 +32,7 @@ class _NullTypeRegistry implements TypeRegistryImpl {
   Never findAdapterForValue(value) => throw UnimplementedError();
 
   @override
-  Never findAdapterForType<E>() => throw UnimplementedError();
+  Never findAdapterForType(Type type) => throw UnimplementedError();
 
   @override
   Never ignoreTypeId<T>(int typeId) => throw UnimplementedError();
@@ -79,10 +79,10 @@ class TypeRegistryImpl implements TypeRegistry {
     return _typeAdapters[typeId];
   }
 
-  ResolvedAdapter<E>? findAdapterForType<E>() {
+  ResolvedAdapter? findAdapterForType(Type type) {
     for (var adapter in _typeAdapters.values) {
-      if (adapter.matchesType(E)) {
-        return adapter as ResolvedAdapter<E>;
+      if (adapter.matchesType(type)) {
+        return adapter;
       }
     }
     return null;

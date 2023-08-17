@@ -6,7 +6,7 @@ import 'src/lib.dart';
 part 'main.g.dart';
 
 @HiveType(typeId: 1)
-class Person {
+class Person extends HiveObject {
   Person({required this.name, required this.age, required this.friends});
 
   @HiveField(0)
@@ -25,7 +25,7 @@ class Person {
 }
 
 @HiveType(typeId: 222)
-class Person2 {
+class Person2 extends HiveObject {
   Person2({required this.name, required this.age, required this.friends});
 
   @HiveField(0)
@@ -86,16 +86,17 @@ void main() async {
   print(box.get('dave')); // Dave: 22
   print(box.get(1)); // Dave: 22
 
-  final tb = await Hive.openTypeBox<Person>(oldBox: box);
-
-  await tb.close();
-  await box.close();
-
   final sw = Stopwatch();
   sw.start();
-  var lb = await Hive.openTypeBox<Person>();
+  await Hive.openTypeBox2<Person, Person2>(oldBox: box);
   sw.stop();
   print("time cost: ${sw.elapsedMilliseconds}");
+
+  final tb = Hive.typeBox<Person>();
+
+  await box.close();
+
+  var lb = Hive.typeBox<Person>();
   print(lb.get('peter')); // Peter: 21
   print(lb.get('dave')); // Dave: 22
 
